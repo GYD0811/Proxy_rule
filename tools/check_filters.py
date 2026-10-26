@@ -299,6 +299,7 @@ def check_groups(
         "TW_Filter",
         "省流量_Filter",
         "专线_Filter",
+        "Gemini_Filter",
     }
     if set(filters) != expected_filters:
         fail(f"filter set {set(filters)} != {expected_filters}")
@@ -316,6 +317,7 @@ def check_groups(
         "台湾": "TW_Filter",
         "省流量": "省流量_Filter",
         "专线": "专线_Filter",
+        "Gemini": "Gemini_Filter",
     }
     for name, filter_name in auto.items():
         kind, policies, params = groups[name]
@@ -348,7 +350,7 @@ def check_groups(
                 fail(f"AI policies {policies}")
             continue
         if name == "谷歌服务":
-            expected = ["AI"] + STANDARD_POLICIES
+            expected = ["Gemini", "AI"] + STANDARD_POLICIES
             if policies != expected:
                 fail(f"谷歌服务 policies {policies}")
             continue
@@ -368,6 +370,25 @@ def check_groups(
 
     if any("ALL_Filter" in groups[name][1] for name in groups):
         fail("business/region groups must not expand ALL_Filter directly")
+    if groups["Gemini"][1] != ["Gemini_Filter"]:
+        fail(f"Gemini group members {groups['Gemini'][1]}")
+    if "谷歌服务" in groups["Gemini"][1] or "谷歌服务" in groups["AI"][1]:
+        fail("Gemini or AI references 谷歌服务")
+    if "Gemini" in groups["AI"][1] or "AI" in groups["Gemini"][1]:
+        fail("AI and Gemini reference each other")
+
+    def walk(name: str, seen: set[str]) -> None:
+        if name in seen:
+            fail(f"policy cycle at {name}: {seen}")
+        if name not in groups:
+            return
+        nxt = seen | {name}
+        for policy in groups[name][1]:
+            walk(policy, nxt)
+
+    walk("谷歌服务", set())
+    walk("Gemini", set())
+    walk("AI", set())
 
     sections = parse_sections(text)
     for line in sections.get("Remote Rule", []):
@@ -380,6 +401,93 @@ def check_groups(
     final = [line.strip() for line in sections.get("Rule", []) if line.strip().startswith("FINAL,")]
     if final != ["FINAL,兜底"]:
         fail(f"FINAL rule changed: {final}")
+    remote = [line.strip() for line in sections.get("Remote Rule", []) if line.strip() and not line.strip().startswith("#")]
+
+    def remote_index(filename: str) -> int:
+        hits = [i for i, line in enumerate(remote) if f"/rule/{filename}.list" in line]
+        if len(hits) != 1:
+            fail(f"remote rule {filename}.list count {len(hits)}")
+        return hits[0]
+
+    gemini_at = remote_index("Gemini")
+    if not (gemini_at < remote_index("AI") and gemini_at < remote_index("Google")):
+        fail("Gemini.list must be listed before AI.list and Google.list")
+    if "policy=Gemini" not in remote[gemini_at]:
+        fail(f"Gemini remote rule policy {remote[gemini_at]}")
+
+
+GEMINI_NODES = [
+    "🇯🇵AWS日本01 | 电信移动联通推荐",
+    "🇺🇸美国05-0.1倍 | 电信联通移动推荐",
+    "🇺🇸美国06-0.1倍 | 电信联通移动推荐",
+    "🇺🇸美国07-0.1倍 | 电信联通移动推荐",
+    "🇺🇸美国圣何塞05-0.1倍",
+    "🇺🇸美国圣何塞06-0.1倍",
+    "🇺🇸美国圣何塞07-0.1倍",
+    "🇺🇸美国圣何塞05 | 三网推荐",
+    "🇺🇸美国圣何塞06 | 三网推荐",
+    "🇺🇸美国圣何塞07 | 三网推荐",
+]
+GEMINI_REJECT = [
+    "🇺🇸美国05 | 合适下载使用-0.01倍",
+    "🇺🇸美国圣何塞04 | 三网推荐",
+    "🇯🇵AWS日本10 | 电信移动联通推荐",
+    "剩余流量：4.74 TB",
+]
+GEMINI_DOMAINS = [
+    "DOMAIN,ai.google.dev",
+    "DOMAIN,aistudio.google.com",
+    "DOMAIN,alkalimakersuite-pa.clients6.google.com",
+    "DOMAIN,generativelanguage.googleapis.com",
+    "DOMAIN,makersuite.google.com",
+    "DOMAIN-SUFFIX,bard.google.com",
+    "DOMAIN-SUFFIX,deepmind.com",
+    "DOMAIN-SUFFIX,deepmind.google",
+    "DOMAIN-SUFFIX,gemini.google",
+    "DOMAIN-SUFFIX,gemini.google.com",
+    "DOMAIN-SUFFIX,generativeai.google",
+    "DOMAIN-SUFFIX,proactivebackend-pa.googleapis.com",
+]
+
+
+def check_gemini(filters: dict[str, re.Pattern[str]], sample_count: int) -> None:
+    if sample_count != 0:
+        fail(f"generated 68-node sample matched Gemini_Filter {sample_count} times")
+    matched_names = []
+    for name in GEMINI_NODES:
+        hits = matched(filters, name)
+        if "Gemini_Filter" not in hits:
+            fail(f"Gemini node missed: {name} -> {hits}")
+        if "ALL_Filter" not in hits:
+            fail(f"Gemini node missed ALL_Filter: {name}")
+        matched_names.append(name)
+    if len(matched_names) != 10:
+        fail(f"expected 10 Gemini nodes, got {len(matched_names)}")
+    for name in GEMINI_REJECT:
+        hits = matched(filters, name)
+        if "Gemini_Filter" in hits:
+            fail(f"non-Gemini name matched Gemini_Filter: {name} -> {hits}")
+    if matched(filters, "剩余流量：4.74 TB"):
+        fail("剩余流量：4.74 TB entered a filter")
+    ai_text = (ROOT / "rule" / "AI.list").read_text(encoding="utf-8")
+    gemini_text = (ROOT / "rule" / "Gemini.list").read_text(encoding="utf-8")
+    for line in GEMINI_DOMAINS:
+        if line not in gemini_text.splitlines():
+            fail(f"Gemini.list missing {line}")
+        if line in ai_text.splitlines():
+            fail(f"AI.list still contains {line}")
+
+
+def print_gemini(filters: dict[str, re.Pattern[str]]) -> None:
+    print("Gemini 节点自测：10 个通过节点命中 Gemini_Filter，以下名称不命中。")
+    print()
+    print("| 节点 | Gemini_Filter |")
+    print("| --- | --- |")
+    for name in GEMINI_NODES:
+        print(f"| `{name}` | 是 |")
+    for name in GEMINI_REJECT:
+        print(f"| `{name}` | 否 |")
+    print()
 
 
 def pattern_rows(nodes: list[dict[str, object]]) -> None:
@@ -407,6 +515,7 @@ def main() -> None:
     counts = check_nodes(filters, nodes)
     check_rejected(filters)
     check_groups(text, filters, groups)
+    check_gemini(filters, counts["Gemini_Filter"])
 
     print("样例节点 68，信息条目不进入任何筛选。")
     print()
@@ -428,6 +537,7 @@ def main() -> None:
     print()
     pattern_rows(nodes)
     print()
+    print_gemini(filters)
     print("check_filters: ok")
 
 
