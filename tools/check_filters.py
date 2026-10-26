@@ -418,6 +418,10 @@ def check_groups(
     geoip_lines = [line for line in general if line.startswith("geoip-url")]
     if geoip_lines != [f"geoip-url = {geoip_url}"]:
         fail(f"expected exactly one geoip-url, got {geoip_lines}")
+    ipasn_url = "https://raw.githubusercontent.com/Loyalsoldier/geoip/release/GeoLite2-ASN.mmdb"
+    ipasn_lines = [line for line in general if line.startswith("ipasn-url")]
+    if ipasn_lines != [f"ipasn-url = {ipasn_url}"]:
+        fail(f"expected exactly one ipasn-url, got {ipasn_lines}")
     remote = [line.strip() for line in sections.get("Remote Rule", []) if line.strip() and not line.strip().startswith("#")]
 
     def remote_index(filename: str) -> int:
