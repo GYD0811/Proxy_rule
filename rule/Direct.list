@@ -83,6 +83,7 @@ DOMAIN,vd.l.qq.com
 DOMAIN,vi.l.qq.com
 DOMAIN-KEYWORD,ctc.qzs.qzone.qq.com
 DOMAIN-SUFFIX,foxmail.com
+DOMAIN-SUFFIX,gtimg.cn
 DOMAIN-SUFFIX,gtimg.com
 DOMAIN-SUFFIX,idqqimg.com
 DOMAIN-SUFFIX,imqq.com
@@ -90,7 +91,10 @@ DOMAIN-SUFFIX,myapp.com
 DOMAIN-SUFFIX,myqcloud.com
 DOMAIN-SUFFIX,qcloud.com
 DOMAIN-SUFFIX,qcloudimg.com
+DOMAIN-SUFFIX,qlogo.cn
+DOMAIN-SUFFIX,qpic.cn
 DOMAIN-SUFFIX,qq.com
+DOMAIN-SUFFIX,qq.com.cn
 DOMAIN-SUFFIX,qqmail.com
 DOMAIN-SUFFIX,qqurl.com
 DOMAIN-SUFFIX,qzone.com
@@ -99,6 +103,7 @@ DOMAIN-SUFFIX,smtcdns.com
 DOMAIN-SUFFIX,smtcdns.net
 DOMAIN-SUFFIX,tencent.com
 DOMAIN-SUFFIX,tencent.com.hk
+DOMAIN-SUFFIX,tencent-cloud.cn
 DOMAIN-SUFFIX,tencent-cloud.com
 DOMAIN-SUFFIX,tencent-cloud.net
 DOMAIN-SUFFIX,tencentcs.com
@@ -106,7 +111,10 @@ DOMAIN-SUFFIX,tencentmusic.com
 DOMAIN-SUFFIX,tencentyun.com
 DOMAIN-SUFFIX,tenpay.com
 DOMAIN-SUFFIX,wechat.com
+DOMAIN-SUFFIX,wechatapp.com
+DOMAIN-SUFFIX,wechatpay.com
 DOMAIN-SUFFIX,wegame.com
+DOMAIN-SUFFIX,weixinbridge.com
 DOMAIN-SUFFIX,weiyun.com
 
 # Baidu & iQiyi 

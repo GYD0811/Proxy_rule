@@ -73,6 +73,7 @@ TW_Filter = NameRegex, FilterKey = "(?i)^(?!.*(流量|到期|官网|重置)).*(�
 Gemini_Filter = NameRegex, FilterKey = "(?i)^(?!.*(流量|到期|官网|重置)).*(?:美国(圣何塞)?0[5-7](-0[.]1倍| [|] 三网)|AWS日本01).*$"
 
 [Rule]
+GEOIP,CN,DIRECT
 FINAL,兜底
 #Type:DOMAIN-SUFFIX,DOMAIN,DOMAIN-KEYWORD,USER-AGENT,URL-REGEX,IP-CIDR
 #Strategy:DIRECT,PROXY,REJECT

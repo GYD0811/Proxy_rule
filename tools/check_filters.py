@@ -398,9 +398,17 @@ def check_groups(
         target = policy.group(1)
         if target not in groups and target not in BUILTIN:
             fail(f"remote rule policy missing: {target}")
-    final = [line.strip() for line in sections.get("Rule", []) if line.strip().startswith("FINAL,")]
-    if final != ["FINAL,兜底"]:
-        fail(f"FINAL rule changed: {final}")
+    rule_lines = [line.strip() for line in sections.get("Rule", [])]
+    final_rows = [line for line in rule_lines if line.startswith("FINAL,")]
+    if final_rows != ["FINAL,兜底"]:
+        fail(f"FINAL rule changed: {final_rows}")
+    final_at = rule_lines.index("FINAL,兜底")
+    if final_at == 0 or rule_lines[final_at - 1] != "GEOIP,CN,DIRECT":
+        fail("GEOIP,CN,DIRECT must be the line directly before FINAL,兜底")
+    direct_lines = (ROOT / "rule" / "Direct.list").read_text(encoding="utf-8").splitlines()
+    for domain in ("qpic.cn", "qlogo.cn"):
+        if f"DOMAIN-SUFFIX,{domain}" not in direct_lines:
+            fail(f"Direct.list missing DOMAIN-SUFFIX,{domain}")
     remote = [line.strip() for line in sections.get("Remote Rule", []) if line.strip() and not line.strip().startswith("#")]
 
     def remote_index(filename: str) -> int:
