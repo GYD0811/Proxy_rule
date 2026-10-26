@@ -409,6 +409,15 @@ def check_groups(
     for domain in ("qpic.cn", "qlogo.cn"):
         if f"DOMAIN-SUFFIX,{domain}" not in direct_lines:
             fail(f"Direct.list missing DOMAIN-SUFFIX,{domain}")
+    general = [
+        line.strip()
+        for line in sections.get("General", [])
+        if line.strip() and not line.strip().startswith("#")
+    ]
+    geoip_url = "https://raw.githubusercontent.com/Loyalsoldier/geoip/release/Country.mmdb"
+    geoip_lines = [line for line in general if line.startswith("geoip-url")]
+    if geoip_lines != [f"geoip-url = {geoip_url}"]:
+        fail(f"expected exactly one geoip-url, got {geoip_lines}")
     remote = [line.strip() for line in sections.get("Remote Rule", []) if line.strip() and not line.strip().startswith("#")]
 
     def remote_index(filename: str) -> int:
