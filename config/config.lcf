@@ -39,7 +39,8 @@ interface-mode = auto
 省流量 = select,省流量_Filter
 专线 = select,专线_Filter
 兜底 = select,美国自动,日本自动,新加坡自动,台湾自动,美国,日本,新加坡,台湾,省流量,专线
-AI = select,美国自动,日本自动,新加坡自动,美国,日本,新加坡
+# 默认手动美国，避免自动测速换 IP。调大 url-test 的 tolerance 仍会在延迟差超过阈值后切换。
+AI = select,美国,美国自动,日本自动,新加坡自动,日本,新加坡
 常用论坛 = select,美国自动,日本自动,新加坡自动,台湾自动,美国,日本,新加坡,台湾,省流量,专线
 Leo = select,美国自动,日本自动,新加坡自动,台湾自动,美国,日本,新加坡,台湾,省流量,专线
 谷歌服务 = select,美国自动,日本自动,新加坡自动,台湾自动,美国,日本,新加坡,台湾,省流量,专线
@@ -76,25 +77,25 @@ FINAL,兜底
 
 
 [Remote Rule]
-https://raw.githubusercontent.com/DonaldKing2022/Proxy_rule/refs/heads/main/rule/Adblock.list, policy=REJECT-DROP, tag=拦截广告跟踪器, enabled=true
-https://raw.githubusercontent.com/DonaldKing2022/Proxy_rule/refs/heads/main/rule/AI.list, policy=AI, tag=主流AI服务, enabled=true
-https://raw.githubusercontent.com/DonaldKing2022/Proxy_rule/refs/heads/main/rule/Apple.list, policy=Apple, tag=Apple服务, enabled=true
-https://raw.githubusercontent.com/DonaldKing2022/Proxy_rule/refs/heads/main/rule/BiliBili.list, policy=BiliBili, tag=B站, enabled=true
-https://raw.githubusercontent.com/DonaldKing2022/Proxy_rule/refs/heads/main/rule/Direct.list, policy=Direct, tag=直连规则, enabled=true
-https://raw.githubusercontent.com/DonaldKing2022/Proxy_rule/refs/heads/main/rule/DouYin.list, policy=抖音, tag=抖音分流, enabled=true
-https://raw.githubusercontent.com/DonaldKing2022/Proxy_rule/refs/heads/main/rule/Game.list, policy=游戏平台, tag=主流游戏平台, enabled=true
-https://raw.githubusercontent.com/DonaldKing2022/Proxy_rule/refs/heads/main/rule/Google.list, policy=谷歌服务, tag=谷歌服务, enabled=true
-https://raw.githubusercontent.com/DonaldKing2022/Proxy_rule/refs/heads/main/rule/leosweb.list, policy=Leo, tag=Leo的自有服务, enabled=true
-https://raw.githubusercontent.com/DonaldKing2022/Proxy_rule/refs/heads/main/rule/Microsoft.list, policy=微软服务, tag=微软服务, enabled=true
-https://raw.githubusercontent.com/DonaldKing2022/Proxy_rule/refs/heads/main/rule/nsweb.list, policy=常用论坛, tag=一些常用论坛, enabled=true
-https://raw.githubusercontent.com/DonaldKing2022/Proxy_rule/refs/heads/main/rule/PayPal.list, policy=PayPal, tag=PayPal, enabled=true
-https://raw.githubusercontent.com/DonaldKing2022/Proxy_rule/refs/heads/main/rule/special.list, policy=内网段【默认绕过】, tag=内网段, enabled=true
-https://raw.githubusercontent.com/DonaldKing2022/Proxy_rule/refs/heads/main/rule/Speedtest.list, policy=Speedtest, tag=测速分流, enabled=true
-https://raw.githubusercontent.com/DonaldKing2022/Proxy_rule/refs/heads/main/rule/Spotify.list, policy=Spotify, tag=Spotify, enabled=true
-https://raw.githubusercontent.com/DonaldKing2022/Proxy_rule/refs/heads/main/rule/Telegram.list, policy=Telegram, tag=Telegram, enabled=true
-https://raw.githubusercontent.com/DonaldKing2022/Proxy_rule/refs/heads/main/rule/TikTok.list, policy=TikTok, tag=TikTok, enabled=true
-https://raw.githubusercontent.com/DonaldKing2022/Proxy_rule/refs/heads/main/rule/Twitter.list, policy=X【Twitter】, tag=, enabled=true
-https://raw.githubusercontent.com/DonaldKing2022/Proxy_rule/refs/heads/main/rule/Video.list, policy=流媒体, tag=流媒体, enabled=true
+https://raw.githubusercontent.com/GYD0811/Proxy_rule/main/rule/Adblock.list, policy=REJECT-DROP, tag=拦截广告跟踪器, enabled=true
+https://raw.githubusercontent.com/GYD0811/Proxy_rule/main/rule/AI.list, policy=AI, tag=主流AI服务, enabled=true
+https://raw.githubusercontent.com/GYD0811/Proxy_rule/main/rule/Apple.list, policy=Apple, tag=Apple服务, enabled=true
+https://raw.githubusercontent.com/GYD0811/Proxy_rule/main/rule/BiliBili.list, policy=BiliBili, tag=B站, enabled=true
+https://raw.githubusercontent.com/GYD0811/Proxy_rule/main/rule/Direct.list, policy=Direct, tag=直连规则, enabled=true
+https://raw.githubusercontent.com/GYD0811/Proxy_rule/main/rule/DouYin.list, policy=抖音, tag=抖音分流, enabled=true
+https://raw.githubusercontent.com/GYD0811/Proxy_rule/main/rule/Game.list, policy=游戏平台, tag=主流游戏平台, enabled=true
+https://raw.githubusercontent.com/GYD0811/Proxy_rule/main/rule/Google.list, policy=谷歌服务, tag=谷歌服务, enabled=true
+https://raw.githubusercontent.com/GYD0811/Proxy_rule/main/rule/leosweb.list, policy=Leo, tag=Leo的自有服务, enabled=true
+https://raw.githubusercontent.com/GYD0811/Proxy_rule/main/rule/Microsoft.list, policy=微软服务, tag=微软服务, enabled=true
+https://raw.githubusercontent.com/GYD0811/Proxy_rule/main/rule/nsweb.list, policy=常用论坛, tag=一些常用论坛, enabled=true
+https://raw.githubusercontent.com/GYD0811/Proxy_rule/main/rule/PayPal.list, policy=PayPal, tag=PayPal, enabled=true
+https://raw.githubusercontent.com/GYD0811/Proxy_rule/main/rule/special.list, policy=内网段【默认绕过】, tag=内网段, enabled=true
+https://raw.githubusercontent.com/GYD0811/Proxy_rule/main/rule/Speedtest.list, policy=Speedtest, tag=测速分流, enabled=true
+https://raw.githubusercontent.com/GYD0811/Proxy_rule/main/rule/Spotify.list, policy=Spotify, tag=Spotify, enabled=true
+https://raw.githubusercontent.com/GYD0811/Proxy_rule/main/rule/Telegram.list, policy=Telegram, tag=Telegram, enabled=true
+https://raw.githubusercontent.com/GYD0811/Proxy_rule/main/rule/TikTok.list, policy=TikTok, tag=TikTok, enabled=true
+https://raw.githubusercontent.com/GYD0811/Proxy_rule/main/rule/Twitter.list, policy=X【Twitter】, tag=, enabled=true
+https://raw.githubusercontent.com/GYD0811/Proxy_rule/main/rule/Video.list, policy=流媒体, tag=流媒体, enabled=true
 
 
 [Rewrite]
