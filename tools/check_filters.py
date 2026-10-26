@@ -344,8 +344,13 @@ def check_groups(
         if kind != "select":
             fail(f"{name} should be select")
         if name == "AI":
-            if policies != AI_POLICIES:
+            if policies != AI_POLICIES or "谷歌服务" in policies:
                 fail(f"AI policies {policies}")
+            continue
+        if name == "谷歌服务":
+            expected = ["AI"] + STANDARD_POLICIES
+            if policies != expected:
+                fail(f"谷歌服务 policies {policies}")
             continue
         expected = (["DIRECT"] if name in DIRECT_GROUPS else []) + STANDARD_POLICIES
         if policies != expected:
