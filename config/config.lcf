@@ -20,6 +20,7 @@ internet-test-url = http://wifi.vivo.com.cn/generate_204
 test-timeout = 3
 interface-mode = auto
 geoip-url = https://raw.githubusercontent.com/Loyalsoldier/geoip/release/Country.mmdb
+ipasn-url = https://raw.githubusercontent.com/Loyalsoldier/geoip/release/GeoLite2-ASN.mmdb
 
 [Proxy]
 
