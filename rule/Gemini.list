@@ -15,3 +15,14 @@ DOMAIN-SUFFIX,gemini.google
 DOMAIN-SUFFIX,gemini.google.com
 DOMAIN-SUFFIX,generativeai.google
 DOMAIN-SUFFIX,proactivebackend-pa.googleapis.com
+
+# Antigravity
+DOMAIN-SUFFIX,antigravity.google
+DOMAIN-SUFFIX,antigravity.google.com
+DOMAIN,cloudcode-pa.googleapis.com
+DOMAIN,daily-cloudcode-pa.googleapis.com
+DOMAIN,aicode.googleapis.com
+DOMAIN,businessaicode.googleapis.com
+DOMAIN,aiplatform.googleapis.com
+DOMAIN-SUFFIX,ai.google
+DOMAIN,alkalimakersuiteapplets.pa.googleapis.com

@@ -468,6 +468,8 @@ GEMINI_DOMAINS = [
     "DOMAIN-SUFFIX,gemini.google.com",
     "DOMAIN-SUFFIX,generativeai.google",
     "DOMAIN-SUFFIX,proactivebackend-pa.googleapis.com",
+    "DOMAIN-SUFFIX,antigravity.google",
+    "DOMAIN,cloudcode-pa.googleapis.com",
 ]
 
 
