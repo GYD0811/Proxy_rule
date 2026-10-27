@@ -77,3 +77,7 @@ DOMAIN,default.exp-tas.com
 # https://docs.devin.ai/api-reference/overview
 DOMAIN-SUFFIX,devin.ai
 DOMAIN-SUFFIX,cognition.ai
+
+# Systalyze
+# console.systalyze.com 为控制台，inference.systalyze.com 为 OpenAI 兼容接口
+DOMAIN-SUFFIX,systalyze.com
