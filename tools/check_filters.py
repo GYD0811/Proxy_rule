@@ -526,6 +526,13 @@ def check_gemini(filters: dict[str, re.Pattern[str]], sample_count: int) -> None
             fail(f"Gemini.list missing {line}")
         if line in ai_text.splitlines():
             fail(f"AI.list still contains {line}")
+    systalyze = "DOMAIN-SUFFIX,systalyze.com"
+    if ai_text.splitlines().count(systalyze) != 1:
+        fail(f"AI.list must contain exactly one {systalyze}")
+    for earlier in ("Adblock.list", "Gemini.list"):
+        earlier_text = (ROOT / "rule" / earlier).read_text(encoding="utf-8")
+        if "systalyze" in earlier_text:
+            fail(f"{earlier} would match systalyze.com before AI.list")
 
 
 def print_gemini(filters: dict[str, re.Pattern[str]]) -> None:
