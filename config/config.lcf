@@ -10,8 +10,9 @@ disable-stun = true
 disconnect-on-policy-change = true
 dns-server = 123.123.123.124,223.5.5.5,2001:4860:4860::8888,2400:3200::1
 ip-mode = dual
-skip-proxy = 192.168.0.0/16,10.0.0.0/8,172.16.0.0/12,localhost,*.local,e.crashlynatics.com
-bypass-tun = 10.0.0.0/8,100.64.0.0/10,127.0.0.0/8,169.254.0.0/16,172.16.0.0/12,192.0.0.0/24,192.0.2.0/24,192.88.99.0/24,192.168.0.0/16,198.51.100.0/24,203.0.113.0/24,224.0.0.0/4,255.255.255.255/32
+skip-proxy = 192.168.0.0/16,10.0.0.0/8,172.16.0.0/12,localhost,*.local,e.crashlynatics.com,*.orb.local
+real-ip = *.orb.local
+bypass-tun = 10.0.0.0/8,100.64.0.0/10,127.0.0.0/8,169.254.0.0/16,172.16.0.0/12,192.0.0.0/24,192.0.2.0/24,192.88.99.0/24,192.168.0.0/16,198.51.100.0/24,203.0.113.0/24,224.0.0.0/4,255.255.255.255/32,198.19.248.0/23
 allow-wifi-access = false
 wifi-access-http-port = 7222
 wifi-access-socks5-port = 7221
@@ -75,6 +76,7 @@ TW_Filter = NameRegex, FilterKey = "(?i)^(?!.*(流量|到期|官网|重置)).*(�
 Gemini_Filter = NameRegex, FilterKey = "(?i)^(?!.*(流量|到期|官网|重置)).*(?:美国(圣何塞)?0[5-7](-0[.]1倍| [|] 三网)|AWS日本01).*$"
 
 [Rule]
+DOMAIN-SUFFIX,orb.local,DIRECT
 GEOIP,CN,DIRECT
 FINAL,兜底
 #Type:DOMAIN-SUFFIX,DOMAIN,DOMAIN-KEYWORD,USER-AGENT,URL-REGEX,IP-CIDR

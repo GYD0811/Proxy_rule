@@ -405,6 +405,10 @@ def check_groups(
     final_at = rule_lines.index("FINAL,兜底")
     if final_at == 0 or rule_lines[final_at - 1] != "GEOIP,CN,DIRECT":
         fail("GEOIP,CN,DIRECT must be the line directly before FINAL,兜底")
+    if rule_lines.count("DOMAIN-SUFFIX,orb.local,DIRECT") != 1:
+        fail("expected exactly one DOMAIN-SUFFIX,orb.local,DIRECT")
+    if rule_lines.index("DOMAIN-SUFFIX,orb.local,DIRECT") >= final_at:
+        fail("DOMAIN-SUFFIX,orb.local,DIRECT must come before FINAL")
     direct_lines = (ROOT / "rule" / "Direct.list").read_text(encoding="utf-8").splitlines()
     for domain in ("qpic.cn", "qlogo.cn"):
         if f"DOMAIN-SUFFIX,{domain}" not in direct_lines:
@@ -422,6 +426,17 @@ def check_groups(
     ipasn_lines = [line for line in general if line.startswith("ipasn-url")]
     if ipasn_lines != [f"ipasn-url = {ipasn_url}"]:
         fail(f"expected exactly one ipasn-url, got {ipasn_lines}")
+    real_ip_lines = [line for line in general if line.startswith("real-ip")]
+    if real_ip_lines != ["real-ip = *.orb.local"]:
+        fail(f"expected exactly one real-ip, got {real_ip_lines}")
+    skip_proxy = "skip-proxy = 192.168.0.0/16,10.0.0.0/8,172.16.0.0/12,localhost,*.local,e.crashlynatics.com,*.orb.local"
+    skip_lines = [line for line in general if line.startswith("skip-proxy")]
+    if skip_lines != [skip_proxy]:
+        fail(f"expected exactly one skip-proxy, got {skip_lines}")
+    bypass_tun = "bypass-tun = 10.0.0.0/8,100.64.0.0/10,127.0.0.0/8,169.254.0.0/16,172.16.0.0/12,192.0.0.0/24,192.0.2.0/24,192.88.99.0/24,192.168.0.0/16,198.51.100.0/24,203.0.113.0/24,224.0.0.0/4,255.255.255.255/32,198.19.248.0/23"
+    bypass_lines = [line for line in general if line.startswith("bypass-tun")]
+    if bypass_lines != [bypass_tun]:
+        fail(f"expected exactly one bypass-tun, got {bypass_lines}")
     remote = [line.strip() for line in sections.get("Remote Rule", []) if line.strip() and not line.strip().startswith("#")]
 
     def remote_index(filename: str) -> int:
