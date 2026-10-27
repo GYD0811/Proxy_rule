@@ -409,6 +409,14 @@ def check_groups(
         fail("expected exactly one DOMAIN-SUFFIX,orb.local,DIRECT")
     if rule_lines.index("DOMAIN-SUFFIX,orb.local,DIRECT") >= final_at:
         fail("DOMAIN-SUFFIX,orb.local,DIRECT must come before FINAL")
+    for line in (
+        "IP-CIDR,192.168.0.0/16,DIRECT,no-resolve",
+        "IP-CIDR,172.16.0.0/12,DIRECT,no-resolve",
+    ):
+        if rule_lines.count(line) != 1:
+            fail(f"expected exactly one {line}")
+        if rule_lines.index(line) >= final_at:
+            fail(f"{line} must come before FINAL")
     direct_lines = (ROOT / "rule" / "Direct.list").read_text(encoding="utf-8").splitlines()
     for domain in ("qpic.cn", "qlogo.cn"):
         if f"DOMAIN-SUFFIX,{domain}" not in direct_lines:
@@ -433,10 +441,14 @@ def check_groups(
     skip_lines = [line for line in general if line.startswith("skip-proxy")]
     if skip_lines != [skip_proxy]:
         fail(f"expected exactly one skip-proxy, got {skip_lines}")
-    bypass_tun = "bypass-tun = 10.0.0.0/8,100.64.0.0/10,127.0.0.0/8,169.254.0.0/16,172.16.0.0/12,192.0.0.0/24,192.0.2.0/24,192.88.99.0/24,192.168.0.0/16,198.51.100.0/24,203.0.113.0/24,224.0.0.0/4,255.255.255.255/32,198.19.248.0/23"
+    bypass_tun = "bypass-tun = 10.0.0.0/8,100.64.0.0/10,127.0.0.0/8,169.254.0.0/16,192.0.0.0/24,192.0.2.0/24,192.88.99.0/24,198.51.100.0/24,203.0.113.0/24,224.0.0.0/4,255.255.255.255/32,198.19.248.0/23"
     bypass_lines = [line for line in general if line.startswith("bypass-tun")]
     if bypass_lines != [bypass_tun]:
         fail(f"expected exactly one bypass-tun, got {bypass_lines}")
+    bypass_items = {item.strip() for item in bypass_lines[0].split("=", 1)[1].split(",")}
+    for cidr in ("172.16.0.0/12", "192.168.0.0/16"):
+        if cidr in bypass_items:
+            fail(f"{cidr} must not be in bypass-tun")
     remote = [line.strip() for line in sections.get("Remote Rule", []) if line.strip() and not line.strip().startswith("#")]
 
     def remote_index(filename: str) -> int:
