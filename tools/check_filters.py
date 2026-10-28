@@ -529,10 +529,25 @@ def check_gemini(filters: dict[str, re.Pattern[str]], sample_count: int) -> None
     systalyze = "DOMAIN-SUFFIX,systalyze.com"
     if ai_text.splitlines().count(systalyze) != 1:
         fail(f"AI.list must contain exactly one {systalyze}")
+    kiro_lines = [
+        "DOMAIN-SUFFIX,kiro.dev",
+        "DOMAIN,q.us-east-1.amazonaws.com",
+        "DOMAIN,codewhisperer.us-east-1.amazonaws.com",
+        "DOMAIN,oidc.us-east-1.amazonaws.com",
+        "DOMAIN,q.eu-central-1.amazonaws.com",
+        "DOMAIN,oidc.eu-central-1.amazonaws.com",
+    ]
+    ai_lines = ai_text.splitlines()
+    for line in kiro_lines:
+        if ai_lines.count(line) != 1:
+            fail(f"AI.list must contain exactly one {line}")
     for earlier in ("Adblock.list", "Gemini.list"):
         earlier_text = (ROOT / "rule" / earlier).read_text(encoding="utf-8")
         if "systalyze" in earlier_text:
             fail(f"{earlier} would match systalyze.com before AI.list")
+        for host in ("kiro.dev", "q.us-east-1.amazonaws.com", "codewhisperer.us-east-1.amazonaws.com", "oidc.us-east-1.amazonaws.com", "q.eu-central-1.amazonaws.com", "oidc.eu-central-1.amazonaws.com"):
+            if host in earlier_text:
+                fail(f"{earlier} would match {host} before AI.list")
 
 
 def print_gemini(filters: dict[str, re.Pattern[str]]) -> None:

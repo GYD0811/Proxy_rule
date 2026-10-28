@@ -81,3 +81,12 @@ DOMAIN-SUFFIX,cognition.ai
 # Systalyze
 # console.systalyze.com 为控制台，inference.systalyze.com 为 OpenAI 兼容接口
 DOMAIN-SUFFIX,systalyze.com
+
+# Kiro
+# AWS 的 AI IDE。只放行 kiro.dev 以及 us-east-1 / eu-central-1 的 Q、CodeWhisperer、OIDC，不放行整个 amazonaws.com
+DOMAIN-SUFFIX,kiro.dev
+DOMAIN,q.us-east-1.amazonaws.com
+DOMAIN,codewhisperer.us-east-1.amazonaws.com
+DOMAIN,oidc.us-east-1.amazonaws.com
+DOMAIN,q.eu-central-1.amazonaws.com
+DOMAIN,oidc.eu-central-1.amazonaws.com
