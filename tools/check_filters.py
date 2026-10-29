@@ -410,12 +410,16 @@ def check_groups(
     if rule_lines.index("DOMAIN-SUFFIX,orb.local,DIRECT") >= final_at:
         fail("DOMAIN-SUFFIX,orb.local,DIRECT must come before FINAL")
     citicso_rule = "DOMAIN-SUFFIX,citicso.com,DIRECT"
+    citicsinfo_rule = "DOMAIN-SUFFIX,citicsinfo.com,DIRECT"
     if rule_lines.count(citicso_rule) != 1:
         fail(f"expected exactly one {citicso_rule}")
+    if rule_lines.count(citicsinfo_rule) != 1:
+        fail(f"expected exactly one {citicsinfo_rule}")
     citicso_at = rule_lines.index(citicso_rule)
+    citicsinfo_at = rule_lines.index(citicsinfo_rule)
     geoip_at = rule_lines.index("GEOIP,CN,DIRECT")
-    if not (rule_lines.index("DOMAIN-SUFFIX,orb.local,DIRECT") < citicso_at < geoip_at):
-        fail("DOMAIN-SUFFIX,citicso.com,DIRECT must sit after orb.local and before GEOIP")
+    if not (rule_lines.index("DOMAIN-SUFFIX,orb.local,DIRECT") < citicso_at < citicsinfo_at < geoip_at):
+        fail("citicso.com and citicsinfo.com DIRECT rules must sit after orb.local and before GEOIP")
     for line in (
         "IP-CIDR,192.168.0.0/16,DIRECT,no-resolve",
         "IP-CIDR,172.16.0.0/12,DIRECT,no-resolve",
@@ -454,7 +458,7 @@ def check_groups(
     doh_lines = [line for line in general if line.startswith("doh-server")]
     if doh_lines != [doh_server]:
         fail(f"expected exactly one doh-server, got {doh_lines}")
-    skip_proxy = "skip-proxy = 192.168.0.0/16,10.0.0.0/8,172.16.0.0/12,localhost,*.local,e.crashlynatics.com,*.orb.local,*.citicso.com"
+    skip_proxy = "skip-proxy = 192.168.0.0/16,10.0.0.0/8,172.16.0.0/12,localhost,*.local,e.crashlynatics.com,*.orb.local,*.citicso.com,*.citicsinfo.com"
     skip_lines = [line for line in general if line.startswith("skip-proxy")]
     if skip_lines != [skip_proxy]:
         fail(f"expected exactly one skip-proxy, got {skip_lines}")
@@ -463,8 +467,13 @@ def check_groups(
         for line in sections.get("Host", [])
         if line.strip() and not line.strip().startswith("#")
     ]
-    if host != ["*.citicso.com = server:system", "citicso.com = server:system"]:
-        fail(f"expected citicso.com system DNS in [Host], got {host}")
+    if host != [
+        "*.citicso.com = server:10.23.134.177",
+        "citicso.com = server:10.23.134.177",
+        "*.citicsinfo.com = server:10.23.134.177",
+        "citicsinfo.com = server:10.23.134.177",
+    ]:
+        fail(f"expected company DNS in [Host], got {host}")
     bypass_tun = "bypass-tun = 10.0.0.0/8,100.64.0.0/10,127.0.0.0/8,169.254.0.0/16,192.0.0.0/24,192.0.2.0/24,192.88.99.0/24,198.51.100.0/24,203.0.113.0/24,224.0.0.0/4,255.255.255.255/32,198.19.248.0/23"
     bypass_lines = [line for line in general if line.startswith("bypass-tun")]
     if bypass_lines != [bypass_tun]:
