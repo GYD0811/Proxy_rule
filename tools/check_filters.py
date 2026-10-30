@@ -92,6 +92,7 @@ STANDARD_POLICIES = [
 BUSINESS_GROUPS = [
     "兜底",
     "AI",
+    "开发工具",
     "常用论坛",
     "Leo",
     "谷歌服务",
@@ -345,7 +346,7 @@ def check_groups(
         kind, policies, _params = groups[name]
         if kind != "select":
             fail(f"{name} should be select")
-        if name == "AI":
+        if name in ("AI", "开发工具"):
             if policies != AI_POLICIES or "谷歌服务" in policies:
                 fail(f"AI policies {policies}")
             continue
@@ -611,6 +612,39 @@ def pattern_rows(nodes: list[dict[str, object]]) -> None:
         )
 
 
+def check_devtools(text: str) -> None:
+    root = CONFIG.parent.parent / "rule"
+    dev = root / "DevTools.list"
+    if not dev.exists():
+        fail("rule/DevTools.list 不存在")
+    entries = [l.strip() for l in dev.read_text(encoding="utf-8").splitlines() if l.strip() and not l.startswith("#")]
+    hosts = {e.split(",", 1)[1] for e in entries}
+    for must in ["github.com", "githubusercontent.com", "ghcr.io", "pypi.org", "npmjs.com", "docker.io"]:
+        if must not in hosts:
+            fail(f"DevTools.list 缺少 {must}")
+    for bad in ["1ms.run", "xuanyuan", "daocloud", "npmmirror", "aliyun", "tuna"]:
+        if any(bad in h for h in hosts):
+            fail(f"DevTools.list 不应包含国内镜像 {bad}")
+    ai = {l.strip() for l in (root / "AI.list").read_text(encoding="utf-8").splitlines()}
+    for e in entries:
+        if e in ai:
+            fail(f"DevTools.list 与 AI.list 重复: {e}")
+    for other in root.glob("*.list"):
+        if other.name in ("DevTools.list", "AI.list"):
+            continue
+        for l in other.read_text(encoding="utf-8").splitlines():
+            if l.strip() in entries:
+                fail(f"{other.name} 与 DevTools.list 重复: {l.strip()}")
+    ai_group = re.search(r"^AI = (.+)$", text, re.M)
+    dev_group = re.search(r"^开发工具 = (.+)$", text, re.M)
+    if not dev_group or not ai_group or dev_group.group(1) != ai_group.group(1):
+        fail("开发工具 组需与 AI 组定义一致")
+    lines = text.splitlines()
+    ai_i = next(i for i, l in enumerate(lines) if "rule/AI.list," in l)
+    if "rule/DevTools.list, policy=开发工具," not in lines[ai_i + 1]:
+        fail("DevTools.list 远程规则需紧跟 AI.list，policy=开发工具")
+
+
 def main() -> None:
     text = CONFIG.read_text(encoding="utf-8")
     sections = parse_sections(text)
@@ -621,6 +655,7 @@ def main() -> None:
     check_rejected(filters)
     check_groups(text, filters, groups)
     check_gemini(filters, counts["Gemini_Filter"])
+    check_devtools(text)
 
     print("样例节点 68，信息条目不进入任何筛选。")
     print()

@@ -1,0 +1,33 @@
+# 开发工具：GitHub、包管理、文档与托管平台。国内镜像保持直连，不在此列。
+# GitHub Copilot 留在 AI.list（AI 规则排在前面）。
+DOMAIN-SUFFIX,github.com
+DOMAIN-SUFFIX,githubusercontent.com
+DOMAIN-SUFFIX,githubassets.com
+DOMAIN-SUFFIX,github.io
+DOMAIN-SUFFIX,github.dev
+DOMAIN-SUFFIX,githubapp.com
+DOMAIN-SUFFIX,ghcr.io
+DOMAIN-SUFFIX,gitlab.com
+DOMAIN-SUFFIX,bitbucket.org
+DOMAIN-SUFFIX,npmjs.com
+DOMAIN-SUFFIX,npmjs.org
+DOMAIN-SUFFIX,yarnpkg.com
+DOMAIN-SUFFIX,pypi.org
+DOMAIN-SUFFIX,pythonhosted.org
+DOMAIN-SUFFIX,docker.com
+DOMAIN-SUFFIX,docker.io
+DOMAIN-SUFFIX,brew.sh
+DOMAIN-SUFFIX,go.dev
+DOMAIN-SUFFIX,golang.org
+DOMAIN-SUFFIX,crates.io
+DOMAIN-SUFFIX,rust-lang.org
+DOMAIN-SUFFIX,rustup.rs
+DOMAIN-SUFFIX,gradle.org
+DOMAIN-SUFFIX,jetbrains.com
+DOMAIN-SUFFIX,stackoverflow.com
+DOMAIN-SUFFIX,stackexchange.com
+DOMAIN-SUFFIX,vercel.com
+DOMAIN-SUFFIX,netlify.com
+DOMAIN,repo.maven.apache.org
+DOMAIN,repo1.maven.org
+DOMAIN,releases.hashicorp.com
