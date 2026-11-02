@@ -77,6 +77,7 @@ DIRECT_GROUPS = {
     "内网段【默认绕过】",
 }
 AI_POLICIES = ["美国", "美国自动", "日本自动", "新加坡自动", "日本", "新加坡"]
+DEVTOOLS_POLICIES = ["新加坡", "日本", "美国", "美国自动", "日本自动", "新加坡自动"]
 STANDARD_POLICIES = [
     "美国自动",
     "日本自动",
@@ -346,9 +347,13 @@ def check_groups(
         kind, policies, _params = groups[name]
         if kind != "select":
             fail(f"{name} should be select")
-        if name in ("AI", "开发工具"):
+        if name == "AI":
             if policies != AI_POLICIES or "谷歌服务" in policies:
                 fail(f"AI policies {policies}")
+            continue
+        if name == "开发工具":
+            if policies != DEVTOOLS_POLICIES or "谷歌服务" in policies:
+                fail(f"开发工具 policies {policies}")
             continue
         if name == "谷歌服务":
             expected = ["Gemini", "AI"] + STANDARD_POLICIES
@@ -635,10 +640,10 @@ def check_devtools(text: str) -> None:
         for l in other.read_text(encoding="utf-8").splitlines():
             if l.strip() in entries:
                 fail(f"{other.name} 与 DevTools.list 重复: {l.strip()}")
-    ai_group = re.search(r"^AI = (.+)$", text, re.M)
     dev_group = re.search(r"^开发工具 = (.+)$", text, re.M)
-    if not dev_group or not ai_group or dev_group.group(1) != ai_group.group(1):
-        fail("开发工具 组需与 AI 组定义一致")
+    expected = "select," + ",".join(DEVTOOLS_POLICIES)
+    if not dev_group or dev_group.group(1) != expected:
+        fail("开发工具 组需默认新加坡，其次日本")
     lines = text.splitlines()
     ai_i = next(i for i, l in enumerate(lines) if "rule/AI.list," in l)
     if "rule/DevTools.list, policy=开发工具," not in lines[ai_i + 1]:

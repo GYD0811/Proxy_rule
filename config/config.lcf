@@ -47,8 +47,8 @@ ipasn-url = https://raw.githubusercontent.com/Loyalsoldier/geoip/release/GeoLite
 Gemini = select,Gemini_Filter
 # 默认手动美国，避免自动测速换 IP。调大 url-test 的 tolerance 仍会在延迟差超过阈值后切换。
 AI = select,美国,美国自动,日本自动,新加坡自动,日本,新加坡
-# 开发工具（GitHub 等），与 AI 组一样默认手动美国，不自动切换。
-开发工具 = select,美国,美国自动,日本自动,新加坡自动,日本,新加坡
+# 开发工具（GitHub 等）。默认新加坡节点，其次日本，不自动切换。
+开发工具 = select,新加坡,日本,美国,美国自动,日本自动,新加坡自动
 常用论坛 = select,美国自动,日本自动,新加坡自动,台湾自动,美国,日本,新加坡,台湾,省流量,专线
 Leo = select,美国自动,日本自动,新加坡自动,台湾自动,美国,日本,新加坡,台湾,省流量,专线
 谷歌服务 = select,Gemini,AI,美国自动,日本自动,新加坡自动,台湾自动,美国,日本,新加坡,台湾,省流量,专线
