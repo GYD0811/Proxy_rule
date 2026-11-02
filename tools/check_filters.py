@@ -161,7 +161,7 @@ def parse_groups(lines: list[str]) -> dict[str, tuple[str, list[str], dict[str, 
         line = raw.strip()
         if not line or line.startswith("#"):
             continue
-        match = re.match(r"^(.+?)\s*=\s*(select|url-test)\s*,(.*)$", line)
+        match = re.match(r"^(.+?)\s*=\s*(select|url-test|fallback)\s*,(.*)$", line)
         if not match:
             fail(f"unrecognized Proxy Group line: {line}")
         name, kind, body = match.group(1), match.group(2), match.group(3)
@@ -317,6 +317,8 @@ def check_groups(
         "台湾": "TW_Filter",
         "省流量": "省流量_Filter",
         "专线": "专线_Filter",
+    }
+    failover = {
         "Gemini": "Gemini_Filter",
     }
     for name, filter_name in auto.items():
@@ -335,8 +337,24 @@ def check_groups(
         kind, policies, params = groups[name]
         if kind != "select" or policies != [filter_name] or params:
             fail(f"{name} should select only {filter_name}, got {kind} {policies} {params}")
+    for name, filter_name in failover.items():
+        kind, policies, params = groups[name]
+        if kind != "fallback" or policies != [filter_name]:
+            fail(f"{name} should fallback only {filter_name}, got {kind} {policies}")
+        if params != {
+            "url": "http://www.gstatic.com/generate_204",
+            "interval": "300",
+            "max-timeout": "5000",
+        }:
+            fail(f"{name} fallback params {params}")
+        if any(policy in groups for policy in policies):
+            fail(f"{name} nests a policy group")
 
-    if [name for name in groups if name not in BUSINESS_GROUPS and name not in auto and name not in manual]:
+    if [
+        name
+        for name in groups
+        if name not in BUSINESS_GROUPS and name not in auto and name not in manual and name not in failover
+    ]:
         fail(f"unexpected groups: {list(groups)}")
     if set(BUSINESS_GROUPS) - set(groups):
         fail(f"missing business groups: {set(BUSINESS_GROUPS) - set(groups)}")

@@ -43,8 +43,11 @@ ipasn-url = https://raw.githubusercontent.com/Loyalsoldier/geoip/release/GeoLite
 省流量 = select,省流量_Filter
 专线 = select,专线_Filter
 兜底 = select,美国自动,日本自动,新加坡自动,台湾自动,美国,日本,新加坡,台湾,省流量,专线
-# 手动选择已验证可用的节点，不自动切换。
-Gemini = select,Gemini_Filter
+# 故障转移：平时停在顺序里第一个健康节点，只有探测失败才切到下一个。
+# 不按延迟换 IP。节点恢复后会回到更靠前的健康节点，而不是停在上次切过去的节点。
+# 用 Google generate_204 的 HEAD 探测（比 gemini.google.com 页面不容易把慢响应当成故障）。
+# interval 单位秒；max-timeout 单位毫秒，高于全局 test-timeout，能通的节点不会被换掉。
+Gemini = fallback,Gemini_Filter,url = http://www.gstatic.com/generate_204,interval = 300,max-timeout = 5000
 # 默认手动美国，避免自动测速换 IP。调大 url-test 的 tolerance 仍会在延迟差超过阈值后切换。
 AI = select,美国,美国自动,日本自动,新加坡自动,日本,新加坡
 常用论坛 = select,美国自动,日本自动,新加坡自动,台湾自动,美国,日本,新加坡,台湾,省流量,专线
