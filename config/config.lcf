@@ -47,6 +47,8 @@ ipasn-url = https://raw.githubusercontent.com/Loyalsoldier/geoip/release/GeoLite
 Gemini = select,Gemini_Filter
 # 默认手动美国，避免自动测速换 IP。调大 url-test 的 tolerance 仍会在延迟差超过阈值后切换。
 AI = select,美国,美国自动,日本自动,新加坡自动,日本,新加坡
+# 开发工具（GitHub 等）。默认新加坡节点，其次日本，不自动切换。
+开发工具 = select,新加坡,日本,美国,美国自动,日本自动,新加坡自动
 常用论坛 = select,美国自动,日本自动,新加坡自动,台湾自动,美国,日本,新加坡,台湾,省流量,专线
 Leo = select,美国自动,日本自动,新加坡自动,台湾自动,美国,日本,新加坡,台湾,省流量,专线
 谷歌服务 = select,Gemini,AI,美国自动,日本自动,新加坡自动,台湾自动,美国,日本,新加坡,台湾,省流量,专线
@@ -93,6 +95,7 @@ FINAL,兜底
 https://raw.githubusercontent.com/GYD0811/Proxy_rule/main/rule/Adblock.list, policy=REJECT-DROP, tag=拦截广告跟踪器, enabled=true
 https://raw.githubusercontent.com/GYD0811/Proxy_rule/main/rule/Gemini.list, policy=Gemini, tag=Gemini, enabled=true
 https://raw.githubusercontent.com/GYD0811/Proxy_rule/main/rule/AI.list, policy=AI, tag=主流AI服务, enabled=true
+https://raw.githubusercontent.com/GYD0811/Proxy_rule/main/rule/DevTools.list, policy=开发工具, tag=开发工具, enabled=true
 https://raw.githubusercontent.com/GYD0811/Proxy_rule/main/rule/Apple.list, policy=Apple, tag=Apple服务, enabled=true
 https://raw.githubusercontent.com/GYD0811/Proxy_rule/main/rule/BiliBili.list, policy=BiliBili, tag=B站, enabled=true
 https://raw.githubusercontent.com/GYD0811/Proxy_rule/main/rule/Direct.list, policy=Direct, tag=直连规则, enabled=true
