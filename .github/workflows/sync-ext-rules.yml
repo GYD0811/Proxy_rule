@@ -1,0 +1,30 @@
+name: Sync external rules
+
+on:
+  schedule:
+    - cron: "0 0 * * 1"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Download and transform external rules
+        run: python3 tools/sync_ext_rules.py
+
+      - name: Commit if rule lists changed
+        run: |
+          git add rule/ext/*.list
+          if git diff --cached --quiet; then
+            echo "external rule lists unchanged"
+            exit 0
+          fi
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git commit -m "同步外部规则列表"
+          git push

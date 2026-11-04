@@ -104,6 +104,9 @@ BUSINESS_GROUPS = [
     "TikTok",
     "X【Twitter】",
     "流媒体",
+    "Netflix",
+    "Discord",
+    "Crypto",
     "Apple",
     "Speedtest",
     "游戏平台",
@@ -113,6 +116,41 @@ BUSINESS_GROUPS = [
     "内网段【默认绕过】",
 ]
 REMOVED_FILTERS = ("HK_Filter", "KR_Filter", "EU_Filter")
+RULE_BASE = "https://raw.githubusercontent.com/GYD0811/Proxy_rule/main/rule/"
+EXPECTED_REMOTE_RULES = [
+    f"{RULE_BASE}Adblock.list, policy=REJECT-DROP, tag=拦截广告跟踪器, enabled=true",
+    f"{RULE_BASE}ext/Lan.list, policy=DIRECT, tag=局域网, enabled=true",
+    f"{RULE_BASE}special.list, policy=内网段【默认绕过】, tag=内网段, enabled=true",
+    f"{RULE_BASE}Gemini.list, policy=Gemini, tag=Gemini, enabled=true",
+    f"{RULE_BASE}AI.list, policy=AI, tag=主流AI服务, enabled=true",
+    f"{RULE_BASE}DevTools.list, policy=开发工具, tag=开发工具, enabled=true",
+    f"{RULE_BASE}Telegram.list, policy=Telegram, tag=Telegram, enabled=true",
+    f"{RULE_BASE}Twitter.list, policy=X【Twitter】, tag=, enabled=true",
+    f"{RULE_BASE}TikTok.list, policy=TikTok, tag=TikTok, enabled=true",
+    f"{RULE_BASE}DouYin.list, policy=抖音, tag=抖音分流, enabled=true",
+    f"{RULE_BASE}BiliBili.list, policy=BiliBili, tag=B站, enabled=true",
+    f"{RULE_BASE}Spotify.list, policy=Spotify, tag=Spotify, enabled=true",
+    f"{RULE_BASE}PayPal.list, policy=PayPal, tag=PayPal, enabled=true",
+    f"{RULE_BASE}Speedtest.list, policy=Speedtest, tag=测速分流, enabled=true",
+    f"{RULE_BASE}ext/Discord.list, policy=Discord, tag=Discord, enabled=true",
+    f"{RULE_BASE}ext/Crypto.list, policy=Crypto, tag=Crypto, enabled=true",
+    f"{RULE_BASE}ext/YouTube.list, policy=流媒体, tag=YouTube, enabled=true",
+    f"{RULE_BASE}ext/Netflix.list, policy=Netflix, tag=Netflix, enabled=true",
+    f"{RULE_BASE}ext/Disney.list, policy=流媒体, tag=Disney, enabled=true",
+    f"{RULE_BASE}Video.list, policy=流媒体, tag=流媒体, enabled=true",
+    f"{RULE_BASE}Google.list, policy=谷歌服务, tag=谷歌服务, enabled=true",
+    f"{RULE_BASE}ext/OneDrive.list, policy=微软服务, tag=OneDrive, enabled=true",
+    f"{RULE_BASE}Microsoft.list, policy=微软服务, tag=微软服务, enabled=true",
+    f"{RULE_BASE}Apple.list, policy=Apple, tag=Apple服务, enabled=true",
+    f"{RULE_BASE}ext/SteamCN.list, policy=DIRECT, tag=Steam国内下载, enabled=true",
+    f"{RULE_BASE}Game.list, policy=游戏平台, tag=主流游戏平台, enabled=true",
+    f"{RULE_BASE}leosweb.list, policy=Leo, tag=Leo的自有服务, enabled=true",
+    f"{RULE_BASE}nsweb.list, policy=常用论坛, tag=一些常用论坛, enabled=true",
+    f"{RULE_BASE}Direct.list, policy=Direct, tag=直连规则, enabled=true",
+    f"{RULE_BASE}ext/ChinaDomain.list, policy=DIRECT, tag=国内域名, enabled=true",
+    f"{RULE_BASE}ext/Proxy.list, policy=兜底, tag=海外代理, enabled=true",
+    f"{RULE_BASE}ext/ChinaIP.list, policy=DIRECT, tag=国内IP, enabled=true",
+]
 BUILTIN = {"DIRECT", "REJECT", "REJECT-DROP", "REJECT-IMG", "REJECT-DICT", "REJECT-ARRAY", "PROXY"}
 
 
@@ -386,6 +424,12 @@ def check_groups(
         if name not in DIRECT_GROUPS and "DIRECT" in policies:
             fail(f"{name} gained DIRECT")
 
+    if groups["Netflix"][0] != "select" or groups["Netflix"][1] != groups["流媒体"][1]:
+        fail(f"Netflix policies must match 流媒体, got {groups['Netflix'][1]}")
+    for name in ("Discord", "Crypto"):
+        if groups[name][0] != "select" or groups[name][1] != groups["兜底"][1]:
+            fail(f"{name} policies must match 兜底, got {groups[name][1]}")
+
     known = set(groups) | set(filters) | BUILTIN
     for name, (_kind, policies, _params) in groups.items():
         for policy in policies:
@@ -456,6 +500,9 @@ def check_groups(
     for domain in ("qpic.cn", "qlogo.cn"):
         if f"DOMAIN-SUFFIX,{domain}" not in direct_lines:
             fail(f"Direct.list missing DOMAIN-SUFFIX,{domain}")
+    for line in direct_lines:
+        if "onedrive" in line.lower():
+            fail(f"Direct.list still contains OneDrive entry: {line}")
     general = [
         line.strip()
         for line in sections.get("General", [])
@@ -507,6 +554,15 @@ def check_groups(
         if cidr in bypass_items:
             fail(f"{cidr} must not be in bypass-tun")
     remote = [line.strip() for line in sections.get("Remote Rule", []) if line.strip() and not line.strip().startswith("#")]
+    if remote != EXPECTED_REMOTE_RULES:
+        fail(f"Remote Rule order changed: {remote}")
+    for line in remote:
+        match = re.search(r"/main/rule/(\S+?\.list),", line)
+        if not match:
+            fail(f"remote rule URL missing list path: {line}")
+        path = ROOT / "rule" / match.group(1)
+        if not path.is_file():
+            fail(f"remote rule file missing: {path}")
 
     def remote_index(filename: str) -> int:
         hits = [i for i, line in enumerate(remote) if f"/rule/{filename}.list" in line]
@@ -668,6 +724,44 @@ def check_devtools(text: str) -> None:
         fail("DevTools.list 远程规则需紧跟 AI.list，policy=开发工具")
 
 
+EXT_RULE_RE = re.compile(
+    r"^(?P<type>DOMAIN|DOMAIN-SUFFIX|DOMAIN-KEYWORD|USER-AGENT|URL-REGEX|IP-CIDR|IP-CIDR6|GEOIP|IP-ASN|DST-PORT),"
+    r"(?P<value>.+?)(?P<opt>,no-resolve)?$"
+)
+
+
+def check_ext_lists() -> None:
+    ext = ROOT / "rule" / "ext"
+    referenced = [line for line in EXPECTED_REMOTE_RULES if "/rule/ext/" in line]
+    if len(referenced) != 11:
+        fail(f"expected 11 ext remote rules, got {len(referenced)}")
+    for line in referenced:
+        match = re.search(r"/rule/ext/([^,\s]+)", line)
+        if not match:
+            fail(f"ext remote rule path missing: {line}")
+        path = ext / match.group(1)
+        if not path.is_file():
+            fail(f"missing {path}")
+        rows = path.read_text(encoding="utf-8").splitlines()
+        if len(rows) < 4 or not rows[0].startswith("# Source: https://"):
+            fail(f"{path.name} missing source header")
+        if not rows[1].startswith("# Upstream-License: GPL-"):
+            fail(f"{path.name} missing license header")
+        if not re.fullmatch(r"# Fetched: \d{4}-\d{2}-\d{2}", rows[2]):
+            fail(f"{path.name} missing fetch date")
+        force_no_resolve = path.name in {"ChinaIP.list", "Lan.list"}
+        for row in rows[4:]:
+            if not row or row.startswith("#"):
+                continue
+            parsed = EXT_RULE_RE.fullmatch(row)
+            if not parsed or not parsed.group("value"):
+                fail(f"{path.name} invalid rule: {row}")
+            if parsed.group("opt") and parsed.group("type") not in {"IP-CIDR", "IP-CIDR6", "GEOIP", "IP-ASN"}:
+                fail(f"{path.name} no-resolve on non-IP rule: {row}")
+            if force_no_resolve and parsed.group("type") in {"IP-CIDR", "IP-CIDR6"} and not parsed.group("opt"):
+                fail(f"{path.name} IP rule missing no-resolve: {row}")
+
+
 def main() -> None:
     text = CONFIG.read_text(encoding="utf-8")
     sections = parse_sections(text)
@@ -679,6 +773,7 @@ def main() -> None:
     check_groups(text, filters, groups)
     check_gemini(filters, counts["Gemini_Filter"])
     check_devtools(text)
+    check_ext_lists()
 
     print("样例节点 68，信息条目不进入任何筛选。")
     print()
