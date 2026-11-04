@@ -62,6 +62,11 @@ Telegram = select,美国自动,日本自动,新加坡自动,台湾自动,美国,
 TikTok = select,美国自动,日本自动,新加坡自动,台湾自动,美国,日本,新加坡,台湾,省流量,专线
 X【Twitter】 = select,美国自动,日本自动,新加坡自动,台湾自动,美国,日本,新加坡,台湾,省流量,专线
 流媒体 = select,美国自动,日本自动,新加坡自动,台湾自动,美国,日本,新加坡,台湾,省流量,专线
+# 成员顺序与流媒体一致。
+Netflix = select,美国自动,日本自动,新加坡自动,台湾自动,美国,日本,新加坡,台湾,省流量,专线
+# 成员顺序与兜底一致。
+Discord = select,美国自动,日本自动,新加坡自动,台湾自动,美国,日本,新加坡,台湾,省流量,专线
+Crypto = select,美国自动,日本自动,新加坡自动,台湾自动,美国,日本,新加坡,台湾,省流量,专线
 Apple = select,DIRECT,美国自动,日本自动,新加坡自动,台湾自动,美国,日本,新加坡,台湾,省流量,专线
 Speedtest = select,DIRECT,美国自动,日本自动,新加坡自动,台湾自动,美国,日本,新加坡,台湾,省流量,专线
 游戏平台 = select,DIRECT,美国自动,日本自动,新加坡自动,台湾自动,美国,日本,新加坡,台湾,省流量,专线
@@ -96,26 +101,37 @@ FINAL,兜底
 
 [Remote Rule]
 https://raw.githubusercontent.com/GYD0811/Proxy_rule/main/rule/Adblock.list, policy=REJECT-DROP, tag=拦截广告跟踪器, enabled=true
+https://raw.githubusercontent.com/GYD0811/Proxy_rule/main/rule/ext/Lan.list, policy=DIRECT, tag=局域网, enabled=true
+https://raw.githubusercontent.com/GYD0811/Proxy_rule/main/rule/special.list, policy=内网段【默认绕过】, tag=内网段, enabled=true
 https://raw.githubusercontent.com/GYD0811/Proxy_rule/main/rule/Gemini.list, policy=Gemini, tag=Gemini, enabled=true
 https://raw.githubusercontent.com/GYD0811/Proxy_rule/main/rule/AI.list, policy=AI, tag=主流AI服务, enabled=true
 https://raw.githubusercontent.com/GYD0811/Proxy_rule/main/rule/DevTools.list, policy=开发工具, tag=开发工具, enabled=true
-https://raw.githubusercontent.com/GYD0811/Proxy_rule/main/rule/Apple.list, policy=Apple, tag=Apple服务, enabled=true
-https://raw.githubusercontent.com/GYD0811/Proxy_rule/main/rule/BiliBili.list, policy=BiliBili, tag=B站, enabled=true
-https://raw.githubusercontent.com/GYD0811/Proxy_rule/main/rule/Direct.list, policy=Direct, tag=直连规则, enabled=true
-https://raw.githubusercontent.com/GYD0811/Proxy_rule/main/rule/DouYin.list, policy=抖音, tag=抖音分流, enabled=true
-https://raw.githubusercontent.com/GYD0811/Proxy_rule/main/rule/Game.list, policy=游戏平台, tag=主流游戏平台, enabled=true
-https://raw.githubusercontent.com/GYD0811/Proxy_rule/main/rule/Google.list, policy=谷歌服务, tag=谷歌服务, enabled=true
-https://raw.githubusercontent.com/GYD0811/Proxy_rule/main/rule/leosweb.list, policy=Leo, tag=Leo的自有服务, enabled=true
-https://raw.githubusercontent.com/GYD0811/Proxy_rule/main/rule/Microsoft.list, policy=微软服务, tag=微软服务, enabled=true
-https://raw.githubusercontent.com/GYD0811/Proxy_rule/main/rule/nsweb.list, policy=常用论坛, tag=一些常用论坛, enabled=true
-https://raw.githubusercontent.com/GYD0811/Proxy_rule/main/rule/PayPal.list, policy=PayPal, tag=PayPal, enabled=true
-https://raw.githubusercontent.com/GYD0811/Proxy_rule/main/rule/special.list, policy=内网段【默认绕过】, tag=内网段, enabled=true
-https://raw.githubusercontent.com/GYD0811/Proxy_rule/main/rule/Speedtest.list, policy=Speedtest, tag=测速分流, enabled=true
-https://raw.githubusercontent.com/GYD0811/Proxy_rule/main/rule/Spotify.list, policy=Spotify, tag=Spotify, enabled=true
 https://raw.githubusercontent.com/GYD0811/Proxy_rule/main/rule/Telegram.list, policy=Telegram, tag=Telegram, enabled=true
-https://raw.githubusercontent.com/GYD0811/Proxy_rule/main/rule/TikTok.list, policy=TikTok, tag=TikTok, enabled=true
 https://raw.githubusercontent.com/GYD0811/Proxy_rule/main/rule/Twitter.list, policy=X【Twitter】, tag=, enabled=true
+https://raw.githubusercontent.com/GYD0811/Proxy_rule/main/rule/TikTok.list, policy=TikTok, tag=TikTok, enabled=true
+https://raw.githubusercontent.com/GYD0811/Proxy_rule/main/rule/DouYin.list, policy=抖音, tag=抖音分流, enabled=true
+https://raw.githubusercontent.com/GYD0811/Proxy_rule/main/rule/BiliBili.list, policy=BiliBili, tag=B站, enabled=true
+https://raw.githubusercontent.com/GYD0811/Proxy_rule/main/rule/Spotify.list, policy=Spotify, tag=Spotify, enabled=true
+https://raw.githubusercontent.com/GYD0811/Proxy_rule/main/rule/PayPal.list, policy=PayPal, tag=PayPal, enabled=true
+https://raw.githubusercontent.com/GYD0811/Proxy_rule/main/rule/Speedtest.list, policy=Speedtest, tag=测速分流, enabled=true
+https://raw.githubusercontent.com/GYD0811/Proxy_rule/main/rule/ext/Discord.list, policy=Discord, tag=Discord, enabled=true
+https://raw.githubusercontent.com/GYD0811/Proxy_rule/main/rule/ext/Crypto.list, policy=Crypto, tag=Crypto, enabled=true
+https://raw.githubusercontent.com/GYD0811/Proxy_rule/main/rule/ext/YouTube.list, policy=流媒体, tag=YouTube, enabled=true
+https://raw.githubusercontent.com/GYD0811/Proxy_rule/main/rule/ext/Netflix.list, policy=Netflix, tag=Netflix, enabled=true
+https://raw.githubusercontent.com/GYD0811/Proxy_rule/main/rule/ext/Disney.list, policy=流媒体, tag=Disney, enabled=true
 https://raw.githubusercontent.com/GYD0811/Proxy_rule/main/rule/Video.list, policy=流媒体, tag=流媒体, enabled=true
+https://raw.githubusercontent.com/GYD0811/Proxy_rule/main/rule/Google.list, policy=谷歌服务, tag=谷歌服务, enabled=true
+https://raw.githubusercontent.com/GYD0811/Proxy_rule/main/rule/ext/OneDrive.list, policy=微软服务, tag=OneDrive, enabled=true
+https://raw.githubusercontent.com/GYD0811/Proxy_rule/main/rule/Microsoft.list, policy=微软服务, tag=微软服务, enabled=true
+https://raw.githubusercontent.com/GYD0811/Proxy_rule/main/rule/Apple.list, policy=Apple, tag=Apple服务, enabled=true
+https://raw.githubusercontent.com/GYD0811/Proxy_rule/main/rule/ext/SteamCN.list, policy=DIRECT, tag=Steam国内下载, enabled=true
+https://raw.githubusercontent.com/GYD0811/Proxy_rule/main/rule/Game.list, policy=游戏平台, tag=主流游戏平台, enabled=true
+https://raw.githubusercontent.com/GYD0811/Proxy_rule/main/rule/leosweb.list, policy=Leo, tag=Leo的自有服务, enabled=true
+https://raw.githubusercontent.com/GYD0811/Proxy_rule/main/rule/nsweb.list, policy=常用论坛, tag=一些常用论坛, enabled=true
+https://raw.githubusercontent.com/GYD0811/Proxy_rule/main/rule/Direct.list, policy=Direct, tag=直连规则, enabled=true
+https://raw.githubusercontent.com/GYD0811/Proxy_rule/main/rule/ext/ChinaDomain.list, policy=DIRECT, tag=国内域名, enabled=true
+https://raw.githubusercontent.com/GYD0811/Proxy_rule/main/rule/ext/Proxy.list, policy=兜底, tag=海外代理, enabled=true
+https://raw.githubusercontent.com/GYD0811/Proxy_rule/main/rule/ext/ChinaIP.list, policy=DIRECT, tag=国内IP, enabled=true
 
 
 [Rewrite]
