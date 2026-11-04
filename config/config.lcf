@@ -108,8 +108,8 @@ https://raw.githubusercontent.com/GYD0811/Proxy_rule/main/rule/AI.list, policy=A
 https://raw.githubusercontent.com/GYD0811/Proxy_rule/main/rule/DevTools.list, policy=开发工具, tag=开发工具, enabled=true
 https://raw.githubusercontent.com/GYD0811/Proxy_rule/main/rule/Telegram.list, policy=Telegram, tag=Telegram, enabled=true
 https://raw.githubusercontent.com/GYD0811/Proxy_rule/main/rule/Twitter.list, policy=X【Twitter】, tag=, enabled=true
-https://raw.githubusercontent.com/GYD0811/Proxy_rule/main/rule/TikTok.list, policy=TikTok, tag=TikTok, enabled=true
 https://raw.githubusercontent.com/GYD0811/Proxy_rule/main/rule/DouYin.list, policy=抖音, tag=抖音分流, enabled=true
+https://raw.githubusercontent.com/GYD0811/Proxy_rule/main/rule/TikTok.list, policy=TikTok, tag=TikTok, enabled=true
 https://raw.githubusercontent.com/GYD0811/Proxy_rule/main/rule/BiliBili.list, policy=BiliBili, tag=B站, enabled=true
 https://raw.githubusercontent.com/GYD0811/Proxy_rule/main/rule/Spotify.list, policy=Spotify, tag=Spotify, enabled=true
 https://raw.githubusercontent.com/GYD0811/Proxy_rule/main/rule/PayPal.list, policy=PayPal, tag=PayPal, enabled=true
